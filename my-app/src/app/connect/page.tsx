@@ -30,6 +30,7 @@ const Connect = () => {
     
   return (
     <div>
+      
           Connect  
           <button onClick={connectWallet}>Click me</button>    
           <h1 >{ walletAddress}</h1>
