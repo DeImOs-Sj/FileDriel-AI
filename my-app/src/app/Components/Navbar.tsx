@@ -71,6 +71,7 @@ import {
     TooltipProvider,
 
 } from "@/components/ui/tooltip"
+import Connect from "./Connect"
 
 
 const Navbar = () => {
@@ -98,7 +99,7 @@ const Navbar = () => {
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <Home className="h-5 w-5" />
-                  Dashboard
+                  Ask Secuirity Assistant
                 </Link>
                 <Link
                   href=""
@@ -135,18 +136,18 @@ const Navbar = () => {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="">Dashboard</Link>
+                  <Link href="">Ask Security Assistant</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="">Orders</Link>
+                  <Link href="">Security Testing</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Recent Orders</BreadcrumbPage>
+                <BreadcrumbPage>Storing Auditing Reports</BreadcrumbPage>
             </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -158,7 +159,7 @@ const Navbar = () => {
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
             />
         </div>
-         
+         <Connect/>
         </header>
       
     </div>

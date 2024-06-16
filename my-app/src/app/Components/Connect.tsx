@@ -1,5 +1,6 @@
 "use client"
 import { ethers } from 'ethers';
+import { Button } from "@/components/ui/button"
 
 import React from 'react'
 import{useState } from "react"
@@ -30,10 +31,13 @@ const Connect = () => {
     
   return (
     <div>
-      
-          Connect  
-          <button onClick={connectWallet}>Click me</button>    
-          <h1 >{ walletAddress}</h1>
+       <div>
+      {!walletAddress ? (
+        <Button type="button" className='rounded-full' onClick={connectWallet}>Wallet</Button>
+      ) : (
+        <Button type="button" className='rounded-full'>Connected</Button>
+      )}
+    </div>
     </div>
   )
 }
