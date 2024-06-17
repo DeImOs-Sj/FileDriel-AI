@@ -1,5 +1,10 @@
-import web3 from './web3';
+import provider from './web3';
 import { AbiItem } from 'web3-utils';
+import { ethers } from 'ethers';
+
+
+
+const signer = provider.getSigner();
 
 const address = '0xA0B9A0d158276558fdb4B4bE02B7e9482231abfB'; 
 const abi: AbiItem[] =[
@@ -311,6 +316,6 @@ const abi: AbiItem[] =[
 ]
 
 
-const contract = new web3.eth.Contract(abi, address);
+const contract = new ethers.Contract( address,abi,signer);
 
 export default contract;

@@ -42,7 +42,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-
+import axios from "axios"
 import React, { useState ,useEffect} from 'react';
 
 const StoreFiles = () => {
@@ -73,24 +73,20 @@ const StoreFiles = () => {
   }, [agentId]);
 
   const handleRunAgent = async (e: React.MouseEvent<HTMLButtonElement>) => {
-     e.preventDefault(); 
-    console.log('Running agent with query:', query);
+    e.preventDefault();
     try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const response = await fetch('/api/runAgent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query, account: accounts[0] }),
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const response = await axios.post("/api/agent", {
+        query,
+        account: accounts[0],
       });
-      const data = await response.json();
-      console.log('Run agent response:', data);
-      setAgentId(data.agentId);
+      const result = response.data;
+      setAgentId(result.agentId);
     } catch (error) {
-      console.error('Error running agent:', error);
+      console.error("Error running agent:", error);
     }
   };
+
   return (
     <div className="flex-1">
   

@@ -1,6 +1,13 @@
+import { ethers } from 'ethers';
 
-import Web3 from 'web3';
+// Extend the Window interface to include ethereum
+declare global {
+  interface Window {
+    ethereum: any;
+  }
+}
 
-const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
+// Create the ethers provider using the window.ethereum object provided by MetaMask
+const provider = new ethers.BrowserProvider(window.ethereum, 'any');
 
-export default web3;
+export default provider;
