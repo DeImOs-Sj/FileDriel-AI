@@ -2,9 +2,10 @@ import provider from './web3';
 import { AbiItem } from 'web3-utils';
 import { ethers } from 'ethers';
 
-
-
-const signer = provider.getSigner();
+export interface ContractMethods {
+    runAgent(query: string, maxIterations: number): ethers.ContractTransaction;
+    getMessageHistoryContents(agentId: number): Promise<string[]>;
+}
 
 const address = '0xA0B9A0d158276558fdb4B4bE02B7e9482231abfB'; 
 const abi: AbiItem[] =[
@@ -314,8 +315,12 @@ const abi: AbiItem[] =[
 		"type": "function"
 	}
 ]
+async function createContract(): Promise<ethers.Contract & ContractMethods> {
 
+	const signer = await provider.getSigner();
 
-const contract = new ethers.Contract( address,abi,signer);
+	const contract = new ethers.Contract(address, abi, signer) as ethers.Contract & ContractMethods;
+	return contract;
+}
 
-export default contract;
+export default createContract;
