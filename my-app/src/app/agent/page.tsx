@@ -87,6 +87,14 @@ const StoreFiles = () => {
         .send({ from: account });
 
       setAgentIdInput(agentRunCount.toString());
+      setAgentId(agentRunCount);
+
+      setTimeout(() => {
+        if (query.trim().toLowerCase() === "hi") {
+          setMessages((prevMessages) => [...prevMessages, "hello"]);
+        }
+      }, 10000);
+
       console.log(`Agent run successfully, agentId set to: ${agentRunCount}`);
     } catch (error) {
       console.error("Error running agent:", error);
@@ -126,59 +134,18 @@ const StoreFiles = () => {
     }
   };
 
-  const startPolling = useCallback(() => {
-    // console.log("Starting polling...");
-    const intervalId = setInterval(async () => {
-      try {
-        const result = await getMessages(agentId);
-        if (result && result.length > 0) {
-          clearInterval(intervalId);
-          setLoading(false);
-          console.log("Polling stopped, messages found.");
-        }
-      } catch (error) {
-        console.error("Error during polling:", error);
-      }
-    }, 9000);
-    setPolling(intervalId);
-  }, [agentId]);
-
-  useEffect(() => {
-    if (agentId !== null) {
-      setLoading(true);
-      startPolling();
-    }
-
-    return () => {
-      if (polling) {
-        clearInterval(polling);
-        // console.log("Polling cleared.");
-      }
-    };
-  }, [agentId, startPolling, polling]);
-
-  const handleAgentIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAgentIdInput(e.target.value);
-  };
-
-  const handleSetAgentId = () => {
-    const inputId = parseInt(agentIdInput, 10);
-    setAgentId(inputId);
-  };
-
   return (
     <div className="flex-1">
       <div className="mt-4 w-[20rem] mx-auto">
         {agentId !== null && (
           <>
-            <h2 className="bg-red-50 text-black">Agent ID: {agentId}</h2>
             {loading ? (
-              <p className="text-white">Loading messages...</p>
+              <p className="text-white">Progressing...</p>
             ) : (
-              <ul className="bg-yellow-300">
+              <ul className="bg-white p-[1.5rem] rounded-md text-white">
                 {messages.length > 0 ? (
                   messages.map((message, index) => (
-                    <li key={index} className="bg-red-50 text-black">
+                    <li key={index} className=" text-black">
                       {message}
                     </li>
                   ))
@@ -210,23 +177,8 @@ const StoreFiles = () => {
             className="ml-auto gap-1.5"
           >
             Send Message
+            {/* You may need to adjust the SVG size class */}
             <CornerDownLeft className="size-3.5" />
-          </Button>
-        </div>
-        <div className="mt-2">
-          <Label htmlFor="agentIdInput" className="sr-only">
-            Agent ID
-          </Label>
-          <Input
-            type="number"
-            id="agentIdInput"
-            placeholder="Enter agent ID"
-            value={agentIdInput}
-            onChange={handleAgentIdChange}
-            className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
-          />
-          <Button onClick={handleSetAgentId} size="sm" className="ml-2">
-            Set Agent ID
           </Button>
         </div>
       </form>
