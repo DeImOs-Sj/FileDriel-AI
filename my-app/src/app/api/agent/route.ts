@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     console.log(query, account);
     const runId = await runAgent(query, maxIterations);
+
     const agentId = agentRunCount;
     agentRunCount++;
     return NextResponse.json({ agentId, success: true });

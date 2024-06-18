@@ -1,23 +1,13 @@
-import Web3 from "web3";
 import { address, Abi } from "./contract";
-
-let web3: Web3 | undefined;
-
-if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
-  web3 = new Web3(window.ethereum);
-}
+import Web3 from "web3";
 
 export async function runAgent(query: string, maxIterations: number) {
-  try {
-    if (!web3) {
-      throw new Error("Web3 provider not available");
-    }
+  const web3 = window.web3;
+  const contract = new web3.eth.Contract(Abi, address);
 
-    await window.ethereum.enable();
+  try {
     const accounts = await web3.eth.getAccounts();
     const account = accounts[0];
-
-    const contract = new web3.eth.Contract(Abi, address);
 
     const result = await contract.methods
       .runAgent(query, maxIterations)
@@ -30,13 +20,20 @@ export async function runAgent(query: string, maxIterations: number) {
 }
 
 export async function getMessageHistoryContents(agentId: number) {
-  console.log(agentId);
+  // if (window.ethereum) {
+  //   window.web3 = new Web3(window.ethereum);
+  //   await window.ethereum.enable();
+  // } else if (window.web3) {
+  //   window.web3 = new Web3(window.web3.currentProvider);
+  // } else {
+  //   console.log(
+  //     "Non-Ethereum browser detected. You should consider trying MetaMask!"
+  //   );
+  //   return;
+  // }
+  const web3 = window.web3;
+  const contract = new web3.eth.Contract(Abi, address);
   try {
-    if (!web3) {
-      throw new Error("Web3 provider not available");
-    }
-
-    const contract = new web3.eth.Contract(Abi, address);
     const messages = await contract.methods
       .getMessageHistoryContents(agentId)
       .call();
