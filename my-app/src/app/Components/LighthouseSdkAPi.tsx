@@ -10,11 +10,6 @@ const signAuthMessage = async (
   const signedMessage = await signer.signMessage(verificationMessage);
   return signedMessage;
 };
-const publicKey = process.env.NEXT_PUBLIC_YOUR_PUBLIC_KEY;
-const privateKey = process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY;
-
-console.log(publicKey); // Outputs: 0x4CCCED009AAE31054dAd2BC6cD9B81306D87282e
-console.log(privateKey); // Outputs: 5cdef6f8aae1cb8aa01503227dc0a521357082f4f30077636bb4db90375f99b2
 
 export const getApiKey = async (): Promise<string | null> => {
   try {
@@ -23,7 +18,6 @@ export const getApiKey = async (): Promise<string | null> => {
       privateKey: process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY as string,
     };
 
-    console.log(wallet);
     const verificationMessageResponse = await axios.get(
       `https://api.lighthouse.storage/api/auth/get_message?publicKey=${wallet.publicKey}`
     );

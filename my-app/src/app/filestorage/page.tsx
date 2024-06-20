@@ -6,42 +6,65 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { CornerDownLeft } from "lucide-react";
 import { getApiKey } from "../Components/LighthouseSdkAPi";
+import { useFileContext } from "../Components/FileContext";
 
 const StoreFiles = () => {
   const [query, setQuery] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
   const [showUploadButton, setShowUploadButton] = useState(false);
+  const [uploadedFileHash, setUploadedFileHash] = useState<string | null>(null);
+  const { setFileHash } = useFileContext();
+  // console.log(setFileHash);
 
   const progressCallback = (progressData: any) => {
-    let percentageDone =
-      100 - (progressData?.total / progressData?.uploaded)?.toFixed(2);
-    console.log(percentageDone);
+    if (
+      progressData?.total !== undefined &&
+      progressData?.uploaded !== undefined
+    ) {
+      const total = Number(progressData.total);
+      const uploaded = Number(progressData.uploaded);
+    } else {
+      console.error("Missing total or uploaded in progressData:", progressData);
+    }
   };
-
   const uploadFile = async (file: File) => {
     try {
       const apiKey = await getApiKey();
-      console.log(apiKey);
       if (!apiKey) {
-        console.error("API key not retrieved");
-        return;
+        throw new Error("API key not retrieved");
       }
-      const output = await lighthouse.upload(
-        file,
-        apiKey,
-        false,
-        null,
-        progressCallback
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(
+        "https://node.lighthouse.storage/api/v0/add",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: formData,
+        }
       );
-      console.log("File Status:", output);
-      console.log(
-        "Visit at https://gateway.lighthouse.storage/ipfs/" + output.data.Hash
-      );
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        "File uploaded successfully!",
-        `Visit at https://gateway.lighthouse.storage/ipfs/${output.data.Hash}`,
-      ]);
+
+      if (!response.ok) {
+        throw new Error(`Failed to upload file: ${response.statusText}`);
+      }
+
+      const output = await response.json();
+
+      if (output && output.Hash) {
+        setFileHash(output.Hash);
+
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          "File uploaded successfully!",
+          `Visit at https://gateway.lighthouse.storage/ipfs/${output.Hash}`,
+        ]);
+      } else {
+        throw new Error("Upload output is invalid");
+      }
     } catch (error) {
       console.error("Error uploading file:", error);
       setMessages((prevMessages) => [
@@ -52,38 +75,34 @@ const StoreFiles = () => {
   };
 
   const handleSendMessage = () => {
-    if (query.trim().toLowerCase() === "can you help me to upload the file?") {
-      setShowUploadButton(true);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        "Can you help me to upload the file?",
-        "Sure, please upload your file below.",
-      ]);
-    } else {
-      setMessages((prevMessages) => [...prevMessages, query]);
-    }
-    setQuery("");
+    setTimeout(() => {
+      if (
+        query.trim().toLowerCase() === "can you help me to upload the file?"
+      ) {
+        setShowUploadButton(true);
+        setMessages(() => ["Sure, please upload your file below."]);
+      } else {
+        setMessages((prevMessages) => [...prevMessages, query]);
+      }
+      setQuery("");
+    }, 2000);
   };
 
   return (
-    <div className="flex-1">
-      <div className="mt-4 w-[50rem] mx-auto">
-        <ul className="border rounded-sm mx-auto bg-background focus-within:ring-1 focus-within:ring-ring max-h-90 overflow-y-auto p-4">
-          {messages.length > 0 ? (
-            messages.map((message, index) => (
-              <li
-                key={index}
-                className="text-white p-2 border-b border-gray-700"
-              >
-                {message}
-              </li>
-            ))
-          ) : (
-            <p className="text-white">No messages found</p>
-          )}
+    <div className="container mx-auto mt-4">
+      <div className="message-container border rounded-sm bg-background focus-within:ring-1 focus-within:ring-indigo-500 max-h-90 overflow-y-auto p-6 text-white border-b border-gray-700">
+        <ul className="message-list list-none p-0">
+          {messages.map((message, index) => (
+            <li
+              key={index}
+              className="message-item py-2 border-b border-gray-600"
+            >
+              {message}
+            </li>
+          ))}
         </ul>
         {showUploadButton && (
-          <div className="mt-4 p-4 border rounded-sm bg-background text-center">
+          <div className="upload-container mt-4 p-4 border rounded-sm bg-background text-center">
             <input
               type="file"
               onChange={(e) => {
@@ -91,13 +110,13 @@ const StoreFiles = () => {
                   uploadFile(e.target.files[0]);
                 }
               }}
-              className="text-white"
+              className="upload-input text-white bg-black"
             />
           </div>
         )}
       </div>
       <form
-        className="fixed bottom-0 left-0 right-0 mb-[1rem] text-center p-4 overflow-hidden rounded-lg mx-auto w-[80%] border bg-background focus-within:ring-1 focus-within:ring-ring"
+        className="fixed bottom-0 left-0 right-0 mb-[1rem] text-center p-4 overflow-hidden rounded-lg mx-auto w-[80%] border  focus-within:ring-1 focus-within:ring-indigo-500"
         onSubmit={(e) => {
           e.preventDefault();
           handleSendMessage();
@@ -110,7 +129,7 @@ const StoreFiles = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Enter query"
-          className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
+          className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0  text-white"
         />
         <div className="flex items-center p-3 pt-0">
           <Button

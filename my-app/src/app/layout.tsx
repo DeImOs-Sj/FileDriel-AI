@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "./theme-provider";
 import Side from "./Components/Side";
 import Navbar from "./Components/Navbar";
+import { FileProvider } from "./Components/FileContext";
 
 // Font configuration should be at the top
 const inter = Inter({ subsets: ["latin"] });
@@ -15,7 +16,11 @@ export const metadata: Metadata = {
 };
 
 // Single definition of RootLayout
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
@@ -26,9 +31,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          <Side />
-          <Navbar/>
-          {children}
+          <FileProvider>
+            <Side />
+            <Navbar />
+            {children}
+          </FileProvider>
         </ThemeProvider>
       </body>
     </html>
