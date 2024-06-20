@@ -97,7 +97,7 @@ const StoreFiles = () => {
               key={index}
               className="message-item py-2 border-b border-gray-600"
             >
-              {message}
+              {typeof message === "string" ? message : JSON.stringify(message)}
             </li>
           ))}
         </ul>
@@ -116,7 +116,7 @@ const StoreFiles = () => {
         )}
       </div>
       <form
-        className="fixed bottom-0 left-0 right-0 mb-[1rem] text-center p-4 overflow-hidden rounded-lg mx-auto w-[80%] border  focus-within:ring-1 focus-within:ring-indigo-500"
+        className="fixed bottom-0 left-0 right-0 mb-[1rem] text-center p-4 overflow-hidden rounded-lg mx-auto w-[80%] border  focus-within:ring-1 focus-within:ring-blue-50"
         onSubmit={(e) => {
           e.preventDefault();
           handleSendMessage();

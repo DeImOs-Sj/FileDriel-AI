@@ -1,17 +1,23 @@
 "use client";
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, ReactNode } from "react";
 
-const defaultContextValue = {
-  fileHash: undefined,
-  setFileHash: () => {},
+interface FileContextType {
+  fileHash: string | null;
+  setFileHash: (hash: string) => void;
+}
+
+const FileContext = createContext<FileContextType | undefined>(undefined);
+
+export const useFileContext = () => {
+  const context = useContext(FileContext);
+  if (context === undefined) {
+    throw new Error("useFileContext must be used within a FileProvider");
+  }
+  return context;
 };
 
-const FileContext = createContext(defaultContextValue);
-
-export const useFileContext = () => useContext(FileContext);
-
-export const FileProvider = ({ children }) => {
-  const [fileHash, setFileHash] = useState();
+export const FileProvider = ({ children }: { children: ReactNode }) => {
+  const [fileHash, setFileHash] = useState<string | null>(null);
 
   return (
     <FileContext.Provider value={{ fileHash, setFileHash }}>
