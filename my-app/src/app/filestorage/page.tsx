@@ -88,21 +88,20 @@ const StoreFiles = () => {
     }, 2000);
   };
 
+  // bg-[#151518]
+
   return (
-    <div className="container mx-auto mt-4">
-      <div className="message-container border rounded-sm bg-background focus-within:ring-1 focus-within:ring-indigo-500 max-h-90 overflow-y-auto p-6 text-white border-b border-gray-700">
-        <ul className="message-list list-none p-0">
+    <div className="container mx-auto mt-4 ">
+      <div className="message-container bg-[#151518] border  rounded-sm bg-background  max-h-90 overflow-y-auto p-6 text-white  ">
+        <ul className="message-list list-none p-0 bg-[#151518]">
           {messages.map((message, index) => (
-            <li
-              key={index}
-              className="message-item py-2 border-b border-gray-600"
-            >
+            <li key={index} className="message-item py-2 ">
               {typeof message === "string" ? message : JSON.stringify(message)}
             </li>
           ))}
         </ul>
         {showUploadButton && (
-          <div className="upload-container mt-4 p-4 border rounded-sm bg-background text-center">
+          <div className="upload-container mt-4 p-4  rounded-sm bg-[#151518] text-center">
             <input
               type="file"
               onChange={(e) => {
@@ -110,13 +109,13 @@ const StoreFiles = () => {
                   uploadFile(e.target.files[0]);
                 }
               }}
-              className="upload-input text-white bg-black"
+              className="upload-input text-white bg-background"
             />
           </div>
         )}
       </div>
       <form
-        className="fixed bottom-0 left-0 right-0 mb-[1rem] text-center p-4 overflow-hidden rounded-lg mx-auto w-[80%] border  focus-within:ring-1 focus-within:ring-blue-50"
+        className="fixed bottom-0 left-0 right-0 mb-[1rem] text-center p-4 overflow-hidden rounded-lg mx-auto w-[80%] border  focus-within:ring-1  focus-within:ring-blue-50"
         onSubmit={(e) => {
           e.preventDefault();
           handleSendMessage();
@@ -129,9 +128,9 @@ const StoreFiles = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Enter query"
-          className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0  text-white"
+          className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0   text-white"
         />
-        <div className="flex items-center p-3 pt-0">
+        <div className="flex items-center p-3 pt-0 ">
           <Button
             size="sm"
             className="ml-auto gap-1.5"
