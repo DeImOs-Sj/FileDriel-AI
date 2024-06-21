@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { CornerDownLeft } from "lucide-react";
 import { getApiKey } from "../Components/LighthouseSdkAPi";
 import { useFileContext } from "../Components/FileContext";
+import abi from "../../utils/DealClient.json";
+import Web3 from "web3";
 
 const StoreFiles = () => {
   const [query, setQuery] = useState("");
@@ -14,7 +16,26 @@ const StoreFiles = () => {
   const [showUploadButton, setShowUploadButton] = useState(false);
   const [uploadedFileHash, setUploadedFileHash] = useState<string | null>(null);
   const { setFileHash } = useFileContext();
+  const [pieceCid, setPieceCid] = useState(
+    "baga6ea4seaqhedb2m6yyr4wejjgxrrehujv5yp6ujzgebqaz22qlm6v74apw6oq"
+  );
+  const [pieceSize, setPieceSize] = useState(4096);
+  const [verifiedDeal, setVerifiedDeal] = useState(false);
+  const [label, setLabel] = useState("file-1686957219783.png");
+  const [startEpoch, setStartEpoch] = useState(520000);
+  const [endEpoch, setEndEpoch] = useState(1555200);
+  const [storagePricePerEpoch, setStoragePricePerEpoch] = useState(0);
+  const [providerCollateral, setProviderCollateral] = useState(0);
+  const [clientCollateral, setClientCollateral] = useState(0);
+  const [extraParamsVersion, setExtraParamsVersion] = useState("1");
+  const [locationRef, setLocationRef] = useState(
+    "https://data-depot.lighthouse.storage/api/download/download_car?fileId=c52f62f1-dd4d-4f02-8352-2af72442818d.car"
+  );
+  const [carSize, setCarSize] = useState(2061);
+  const [skipIpniAnnounce, setSkipIpniAnnounce] = useState(false);
+  const [removeUnsealedCopy, setRemoveUnsealedCopy] = useState(false);
   // console.log(setFileHash);
+  const address = "0xfd562f20e65e0d87598cda7f2a1ac348a008fa0d";
 
   const progressCallback = (progressData: any) => {
     if (
@@ -27,6 +48,61 @@ const StoreFiles = () => {
       console.error("Missing total or uploaded in progressData:", progressData);
     }
   };
+
+  const makeDealProposal = async (e: any) => {
+    e.preventDefault();
+
+    const extraParamsV1 = {
+      location_ref: locationRef,
+      car_size: carSize,
+      skip_ipni_announce: skipIpniAnnounce,
+      remove_unsealed_copy: removeUnsealedCopy,
+    };
+
+    const DealRequestStruct = {
+      piece_cid: web3.utils.hexToBytes(pieceCid),
+      piece_size: pieceSize,
+      verified_deal: verifiedDeal,
+      label: label,
+      start_epoch: startEpoch,
+      end_epoch: endEpoch,
+      storage_price_per_epoch: storagePricePerEpoch,
+      provider_collateral: providerCollateral,
+      client_collateral: clientCollateral,
+      extra_params_version: extraParamsVersion,
+      extra_params: extraParamsV1,
+    };
+
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
+      console.log(
+        "Non-Ethereum browser detected. You should consider trying MetaMask!"
+      );
+      return;
+    }
+
+    const web3 = window.web3;
+    const contract = new web3.eth.Contract(abi, address);
+    const maxIterations = 10;
+
+    try {
+      const accounts = await web3.eth.getAccounts();
+      const account = accounts[0];
+
+      const result = await contract.methods
+        .makeDealProposal([DealRequestStruct])
+        .send({ from: account });
+
+      console.log(`Agent run successfully, hash set to: ${result}`);
+    } catch (error) {
+      console.error("Error running agent:", error);
+    }
+  };
+
   const uploadFile = async (file: File) => {
     try {
       const apiKey = await getApiKey();
@@ -81,6 +157,11 @@ const StoreFiles = () => {
       ) {
         setShowUploadButton(true);
         setMessages(() => ["Sure, please upload your file below."]);
+      } else if (
+        query.trim().toLowerCase() === "can you make a deal proposal?"
+      ) {
+        setShowUploadButton(true);
+        setMessages(() => ["Sure, please upload your details ."]);
       } else {
         setMessages((prevMessages) => [...prevMessages, query]);
       }
