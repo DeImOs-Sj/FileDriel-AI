@@ -147,7 +147,7 @@ export const WavyBackground = ({
           style={{
             ...(isSafari ? { filter: `blur(${blur}px)` } : {}),
           }}
-        ></canvas>
+        ></canvas>  
       </div>
     </div>
   );

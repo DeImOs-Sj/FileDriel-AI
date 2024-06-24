@@ -76,7 +76,7 @@ const BuyDataPage = () => {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button variant="outline">Store to Filecoin</Button>
+            <Button variant="outline">Store to Filecoin </Button>
             <Button>Deploy</Button>
           </CardFooter>
         </Card>
@@ -84,5 +84,7 @@ const BuyDataPage = () => {
     </div>
   );
 };
+
+
 
 export default BuyDataPage;
