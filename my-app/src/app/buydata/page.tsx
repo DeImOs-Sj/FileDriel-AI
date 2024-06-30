@@ -26,7 +26,9 @@ const BuyDataPage = () => {
     setTimeout(() => {
       // Reset deployment state after 3 seconds (simulating completion)
       setDeploying(false);
-      alert("Deployment action simulated successfully!");
+      alert(
+        "Deployment action simulated successfully! IPFS CID:QmdcAEzftJt4tP3xhMxNGc46QTTrZL617urLc9VbWShjdq "
+      );
     }, 3000); // Change 3000 to actual delay or remove for instant action
   };
 
