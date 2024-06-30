@@ -9,7 +9,7 @@ import { getApiKey } from "../Components/LighthouseSdkAPi";
 import { useFileContext } from "../Components/FileContext";
 import abi from "../../utils/DealClient.json";
 import Web3 from "web3";
-
+import axios from "axios";
 const StoreFiles = () => {
   const [query, setQuery] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
@@ -133,11 +133,33 @@ const StoreFiles = () => {
       if (output && output.Hash) {
         setFileHash(output.Hash);
 
+        const ipfsUrl = `https://gateway.lighthouse.storage/ipfs/${output.Hash}`;
+
         setMessages((prevMessages) => [
           ...prevMessages,
           "File uploaded successfully!",
           `Visit at https://gateway.lighthouse.storage/ipfs/${output.Hash}`,
         ]);
+
+        try {
+          console.log("hi", ipfsUrl);
+
+          const response = await axios.post(
+            "/api/crawler",
+            { url: ipfsUrl },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          console.log(ipfsUrl);
+
+          console.log("Request success", response.data);
+        } catch (error) {
+          alert("File not accepted ");
+          console.log("Axios error:", error);
+        }
       } else {
         throw new Error("Upload output is invalid");
       }
@@ -168,8 +190,6 @@ const StoreFiles = () => {
       setQuery("");
     }, 2000);
   };
-
-  // bg-[#151518]
 
   return (
     <div className="container mx-auto mt-4 ">

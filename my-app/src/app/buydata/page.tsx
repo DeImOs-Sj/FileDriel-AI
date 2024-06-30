@@ -29,7 +29,7 @@ const BuyDataPage = () => {
       alert(
         "Deployment action simulated successfully! IPFS CID:QmdcAEzftJt4tP3xhMxNGc46QTTrZL617urLc9VbWShjdq "
       );
-    }, 3000); // Change 3000 to actual delay or remove for instant action
+    }, 5000);
   };
 
   return (
@@ -64,9 +64,7 @@ const BuyDataPage = () => {
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button variant="outline">Buy</Button>
-              <Button onClick={handleDeploy} disabled={deploying}>
-                {deploying ? "Deploying..." : "Deploy"}
-              </Button>
+              <Button onClick={handleDeploy}>Deploy</Button>
             </CardFooter>
           </Card>
         ))}

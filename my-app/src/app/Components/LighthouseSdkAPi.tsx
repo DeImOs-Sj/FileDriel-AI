@@ -17,7 +17,7 @@ export const getApiKey = async (): Promise<string | null> => {
       publicKey: process.env.NEXT_PUBLIC_YOUR_PUBLIC_KEY as string,
       privateKey: process.env.NEXT_PUBLIC_WALLET_PRIVATE_KEY as string,
     };
-
+    console.log(wallet);
     const verificationMessageResponse = await axios.get(
       `https://api.lighthouse.storage/api/auth/get_message?publicKey=${wallet.publicKey}`
     );
