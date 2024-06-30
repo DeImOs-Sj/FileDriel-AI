@@ -137,7 +137,7 @@ export const WavyBackground = ({
         <div className={cn("relative z-10", className)} {...props}>
           {children}
           <h1 className="flex justify-center items-center mb-[15rem] font-bold text-[11rem]">
-            Sentinel-AI
+            FileDriel-AI
           </h1>
         </div>
         <canvas
@@ -147,7 +147,7 @@ export const WavyBackground = ({
           style={{
             ...(isSafari ? { filter: `blur(${blur}px)` } : {}),
           }}
-        ></canvas>  
+        ></canvas>
       </div>
     </div>
   );

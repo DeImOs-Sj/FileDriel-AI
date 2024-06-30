@@ -10,10 +10,12 @@ import { useFileContext } from "../Components/FileContext";
 import abi from "../../utils/DealClient.json";
 import Web3 from "web3";
 import axios from "axios";
+import DealClientForm from "../Components/DealProposalForm";
 const StoreFiles = () => {
   const [query, setQuery] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
   const [showUploadButton, setShowUploadButton] = useState(false);
+  const [showUploadForm, setShowUploadForm] = useState(false);
   const [uploadedFileHash, setUploadedFileHash] = useState<string | null>(null);
   const { setFileHash } = useFileContext();
   const [pieceCid, setPieceCid] = useState(
@@ -182,7 +184,7 @@ const StoreFiles = () => {
       } else if (
         query.trim().toLowerCase() === "can you make a deal proposal?"
       ) {
-        setShowUploadButton(true);
+        setShowUploadForm(true);
         setMessages(() => ["Sure, please upload your details ."]);
       } else {
         setMessages((prevMessages) => [...prevMessages, query]);
@@ -212,6 +214,11 @@ const StoreFiles = () => {
               }}
               className="upload-input text-white bg-background"
             />
+          </div>
+        )}
+        {showUploadForm && (
+          <div className="form-container mt-4 p-4 rounded-sm bg-[#151518] h-[30rem] w-[37rem]">
+            <DealClientForm onSubmit={handleSendMessage} />
           </div>
         )}
       </div>

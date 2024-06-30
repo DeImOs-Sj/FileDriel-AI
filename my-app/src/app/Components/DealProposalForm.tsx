@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { DealProposalParams } from "../fevm/make-deal-proposal";
-import styles from "./DealProposalForm.module.css";
+import { useForm, FormProvider, Controller } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import {
+  FormControl,
+  FormDescription,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 interface DealProposalFormProps {
-  onSubmit: (params: DealProposalParams) => void;
+  onSubmit: (params: any) => void;
 }
 
 export default function DealProposalForm({ onSubmit }: DealProposalFormProps) {
@@ -29,9 +37,12 @@ export default function DealProposalForm({ onSubmit }: DealProposalFormProps) {
   const [skipIpniAnnounce, setSkipIpniAnnounce] = useState(false);
   const [removeUnsealedCopy, setRemoveUnsealedCopy] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const params: DealProposalParams = {
+  const methods = useForm();
+  const { handleSubmit, control } = methods;
+
+  const onFormSubmit = (data: any) => {
+    const params = {
+      ...data,
       contract,
       pieceCid,
       pieceSize,
@@ -52,148 +63,154 @@ export default function DealProposalForm({ onSubmit }: DealProposalFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles["deal-proposal-form"]}>
-      <label className={styles["deal-proposal-form__label"]}>
-        Contract:
-        <input
-          type="text"
-          value={contract}
-          onChange={(e) => setContract(e.target.value)}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Piece CID:
-        <input
-          type="text"
-          value={pieceCid}
-          onChange={(e) => setPieceCid(e.target.value)}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Piece size:
-        <input
-          type="number"
-          value={pieceSize}
-          onChange={(e) => setPieceSize(parseInt(e.target.value))}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Verified deal:
-        <input
-          type="checkbox"
-          checked={verifiedDeal}
-          onChange={(e) => setVerifiedDeal(e.target.checked)}
-          className={styles["deal-proposal-form__checkbox"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Label:
-        <input
-          type="text"
-          value={label}
-          onChange={(e) => setLabel(e.target.value)}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Start epoch:
-        <input
-          type="number"
-          value={startEpoch}
-          onChange={(e) => setStartEpoch(parseInt(e.target.value))}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        End epoch:
-        <input
-          type="number"
-          value={endEpoch}
-          onChange={(e) => setEndEpoch(parseInt(e.target.value))}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Storage price per epoch:
-        <input
-          type="number"
-          value={storagePricePerEpoch}
-          onChange={(e) => setStoragePricePerEpoch(parseInt(e.target.value))}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Provider collateral:
-        <input
-          type="number"
-          value={providerCollateral}
-          onChange={(e) => setProviderCollateral(parseInt(e.target.value))}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Client collateral:
-        <input
-          type="number"
-          value={clientCollateral}
-          onChange={(e) => setClientCollateral(parseInt(e.target.value))}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Extra params version:
-        <input
-          type="text"
-          value={extraParamsVersion}
-          onChange={(e) => setExtraParamsVersion(e.target.value)}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Location ref:
-        <input
-          type="text"
-          value={locationRef}
-          onChange={(e) => setLocationRef(e.target.value)}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        CAR size:
-        <input
-          type="number"
-          value={carSize}
-          onChange={(e) => setCarSize(parseInt(e.target.value))}
-          className={styles["deal-proposal-form__input"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Skip IPNI announce:
-        <input
-          type="checkbox"
-          checked={skipIpniAnnounce}
-          onChange={(e) => setSkipIpniAnnounce(e.target.checked)}
-          className={styles["deal-proposal-form__checkbox"]}
-        />
-      </label>
-      <label className={styles["deal-proposal-form__label"]}>
-        Remove unsealed copy:
-        <input
-          type="checkbox"
-          checked={removeUnsealedCopy}
-          onChange={(e) => setRemoveUnsealedCopy(e.target.checked)}
-          className={styles["deal-proposal-form__checkbox"]}
-        />
-      </label>
-      <button
-        type="submit"
-        className={styles["deal-proposal-form__submit-button"]}
-      >
-        Submit
-      </button>
-    </form>
+    <FormProvider {...methods}>
+      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
+        <FormItem>
+          <FormLabel>Contract</FormLabel>
+          <Controller
+            name="task_id"
+            control={control}
+            render={({ field }) => (
+              <Input placeholder="Enter Task ID" {...field} required />
+            )}
+          />
+          <FormDescription>
+            This is the unique identifier for the task.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+        <FormItem>
+          <FormLabel>Piece CID:</FormLabel>
+          <Controller
+            name="piece_cid"
+            control={control}
+            render={({ field }) => (
+              <Input placeholder="Enter Piece CID" {...field} required />
+            )}
+          />
+          <FormDescription>
+            This is the CID for the piece of data.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+        <FormItem>
+          <FormLabel>Piece size:</FormLabel>
+          <Controller
+            name="piece_size"
+            control={control}
+            render={({ field }) => (
+              <Input placeholder="Enter Piece Size" {...field} required />
+            )}
+          />
+          <FormDescription>This is the size of the piece.</FormDescription>
+          <FormMessage />
+        </FormItem>
+        <FormItem>
+          <FormLabel>Verified deal:</FormLabel>
+          <Controller
+            name="verified_deal"
+            control={control}
+            render={({ field }) => (
+              <Input placeholder="Enter Verified Deal" {...field} required />
+            )}
+          />
+          <FormDescription>
+            This is the verification status of the deal.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+        <FormItem>
+          <FormLabel>Label:</FormLabel>
+          <Controller
+            name="label"
+            control={control}
+            render={({ field }) => (
+              <Input placeholder="Enter Label" {...field} required />
+            )}
+          />
+          <FormDescription>This is the label for the piece.</FormDescription>
+          <FormMessage />
+        </FormItem>
+        <FormItem>
+          <FormLabel>Start epoch:</FormLabel>
+          <Controller
+            name="start_epoch"
+            control={control}
+            render={({ field }) => (
+              <Input placeholder="Enter Start Epoch" {...field} required />
+            )}
+          />
+          <FormDescription>This is the start epoch.</FormDescription>
+          <FormMessage />
+        </FormItem>
+        <FormItem>
+          <FormLabel>End epoch:</FormLabel>
+          <Controller
+            name="end_epoch"
+            control={control}
+            render={({ field }) => (
+              <Input placeholder="Enter End Epoch" {...field} required />
+            )}
+          />
+          <FormDescription>This is the end epoch.</FormDescription>
+          <FormMessage />
+        </FormItem>
+        <FormItem>
+          <FormLabel>Storage price per epoch:</FormLabel>
+          <Controller
+            name="storage_price_per_epoch"
+            control={control}
+            render={({ field }) => (
+              <Input
+                placeholder="Enter Storage Price per Epoch"
+                {...field}
+                required
+              />
+            )}
+          />
+          <FormDescription>
+            This is the storage price per epoch.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+        <FormItem>
+          <FormLabel>Provider collateral:</FormLabel>
+          <Controller
+            name="provider_collateral"
+            control={control}
+            render={({ field }) => (
+              <Input
+                placeholder="Enter Provider Collateral"
+                {...field}
+                required
+              />
+            )}
+          />
+          <FormDescription>
+            This is the provider collateral amount.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+        <FormItem>
+          <FormLabel>Remove unsealed copy:</FormLabel>
+          <Controller
+            name="remove_unsealed_copy"
+            control={control}
+            render={({ field }) => (
+              <Input
+                placeholder="Enter Remove Unsealed Copy"
+                {...field}
+                required
+              />
+            )}
+          />
+          <FormDescription>
+            This indicates if the unsealed copy should be removed.
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+        <Button type="submit">Submit</Button>
+      </form>
+    </FormProvider>
   );
 }

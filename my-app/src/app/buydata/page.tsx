@@ -18,6 +18,31 @@ const BuyDataPage = () => {
   const { fileHash } = useFileContext();
   const [deploying, setDeploying] = useState(false);
 
+  const runScript = async (directory: string) => {
+    try {
+      const response = await fetch("/api/run-script", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          directory,
+          chunkSize: 8000,
+          chunkOverlap: 100,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Script ran successfully:", data.output);
+      } else {
+        console.error("Error running script:", data.error);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const handleDeploy = () => {
     // Simulate deployment action
     setDeploying(true);
@@ -34,7 +59,7 @@ const BuyDataPage = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <h1 className="text-2xl font-bold">Get Precision Data Models</h1>
+      <h1 className="text-2xl font-bold">Get Precision Data Set</h1>
       <br />
       {/* {fileHash && <p>File Hash: {fileHash}</p>} */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

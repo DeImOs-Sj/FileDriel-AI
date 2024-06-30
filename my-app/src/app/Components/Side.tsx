@@ -124,7 +124,7 @@ const Aside = () => {
                   <span className="sr-only">Customers</span>
                 </Link>
               </TooltipTrigger>
-              <TooltipContent side="right">Security Assistant</TooltipContent>
+              <TooltipContent side="right">FileDriel Assistant</TooltipContent>
             </Tooltip>
           </TooltipProvider>
           <TooltipProvider>

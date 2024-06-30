@@ -331,7 +331,7 @@ const StoreFiles = () => {
           placeholder="Enter query"
           className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
         />
-        <div className="flex items-center p-3 pt-0">
+        <div className="flex items-center justify-between p-3 pt-0">
           <Button
             onClick={handleRunAgent}
             size="sm"
