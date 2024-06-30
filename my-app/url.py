@@ -18,8 +18,6 @@ def save_as_text(content, file_name):
 
 
 
-# URL of the IPFS file
-# ipfs_url = "https://gateway.lighthouse.storage/ipfs/bafkreic4glv76da6qvfiqneegzsbeolpbmx24ix4xdp4uqhrhvmskgeqyq"
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

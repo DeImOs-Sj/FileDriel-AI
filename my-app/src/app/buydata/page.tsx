@@ -44,15 +44,12 @@ const BuyDataPage = () => {
   };
 
   const handleDeploy = () => {
-    // Simulate deployment action
     setDeploying(true);
 
-    // Simulate asynchronous action (e.g., API call, script execution)
     setTimeout(() => {
-      // Reset deployment state after 3 seconds (simulating completion)
       setDeploying(false);
       alert(
-        "Deployment action simulated successfully! IPFS CID:QmdcAEzftJt4tP3xhMxNGc46QTTrZL617urLc9VbWShjdq "
+        `Deployment action simulated successfully! IPFS CID:${output.Hash}`
       );
     }, 5000);
   };
@@ -99,7 +96,3 @@ const BuyDataPage = () => {
 };
 
 export default BuyDataPage;
-
-// {
-//   model.createrName;
-// }

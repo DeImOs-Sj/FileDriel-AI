@@ -174,23 +174,24 @@ const StoreFiles = () => {
     }
   };
 
-  const handleSendMessage = () => {
-    setTimeout(() => {
-      if (
-        query.trim().toLowerCase() === "can you help me to upload the file?"
-      ) {
-        setShowUploadButton(true);
-        setMessages(() => ["Sure, please upload your file below."]);
-      } else if (
-        query.trim().toLowerCase() === "can you make a deal proposal?"
-      ) {
-        setShowUploadForm(true);
-        setMessages(() => ["Sure, please upload your details ."]);
-      } else {
-        setMessages((prevMessages) => [...prevMessages, query]);
-      }
+  const handleSendMessage = async () => {
+    const web3 = window.web3;
+    const contract = new web3.eth.Contract(abi, address);
+
+    try {
+      const accounts = await web3.eth.getAccounts();
+      const account = accounts[0];
+
+      const result = await contract.methods
+        .sendMessage(query)
+        .send({ from: account });
+
+      console.log("Message sent:", result);
+      setMessages((prevMessages) => [...prevMessages, query]);
       setQuery("");
-    }, 2000);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   return (
